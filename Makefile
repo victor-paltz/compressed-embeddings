@@ -1,3 +1,7 @@
+env:
+	rm -rf .env
+	python3.6 -m venv .env && . .env/bin/activate && make install install-dev
+
 install: ## [Local development] Upgrade pip, install requirements, install package.
 	python -m pip install -U pip setuptools wheel
 	python -m pip install -r requirements.txt
