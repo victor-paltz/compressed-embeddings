@@ -101,7 +101,7 @@ class ModelWithCompressedEmbeddings(tf.keras.Model):
 
         # Retrieve embeddings from memory
         # Shape (bs, 2, embedding_dim)
-        embeddings = self.embedding_table(pair + self.indice_offset)
+        embeddings = self.embedding_table(pair + self.embedding_indice_offset)
 
         # Add dropout to avoid overfitting
         # Shape (bs, 2, embedding_dim)

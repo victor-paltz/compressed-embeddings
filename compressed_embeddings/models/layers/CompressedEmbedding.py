@@ -4,7 +4,8 @@
 from typing import Tuple
 
 import tensorflow as tf
-from utils.hashing_functions import hash_3
+
+from compressed_embeddings.models.utils.hashing_functions import hash_3
 
 
 class CompressedEmbedding(tf.keras.layers.Layer):
