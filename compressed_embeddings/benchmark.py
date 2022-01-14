@@ -12,13 +12,10 @@ import numpy as np
 import tensorflow as tf
 
 
-def benchmark(batch_sizes: List[int], mem_size: List[int]) -> pd.DataFrame:
+def benchmark(nb_embeddings:int, embeding_dim:int, batch_sizes: List[int], mem_size: List[int]) -> pd.DataFrame:
     """ Benchmark compressed embedding table speed """
 
     report = pd.DataFrame()
-
-    nb_embeddings = 100_000
-    embeding_dim = 100
 
     model_names = ["FullEmbTableModel", "CompressedEmbTableModel"]
     optimizers = [
@@ -86,6 +83,7 @@ def benchmark(batch_sizes: List[int], mem_size: List[int]) -> pd.DataFrame:
                             "forward_pass_ms": [forward_pass * 1000],
                             "gradient_computation_ms": [gradient_computation * 1000],
                             "backward_pass_ms": [backward_pass * 1000],
+                            "total_time_ms": [forward_pass * 1000 + gradient_computation * 1000 + backward_pass * 1000],
                             "model size": [cast_bytes_to_memory_string(4 * model.count_params())],
                             "optimizer": [optimizer_name],
                         }
@@ -99,8 +97,10 @@ def benchmark(batch_sizes: List[int], mem_size: List[int]) -> pd.DataFrame:
 # pylint: disable=redefined-outer-name
 if __name__ == "__main__":
 
+    nb_embeddings = 1_000_000
+    embeding_dim = 100
     batch_sizes = [64, 512, 4096, 32768]
-    mem_size = [1, 8, 64, 512] + [32768 * 8 ** i for i in range(5)]
+    mem_size = [1, 8, 64, 512] + [32768 * 8 ** i for i in range(5)] + [nb_embeddings*embeding_dim]
 
-    my_report = benchmark(batch_sizes, mem_size)
+    my_report = benchmark(nb_embeddings, embeding_dim, batch_sizes, mem_size)
     my_report.to_csv("benchmark.csv", index=False)
